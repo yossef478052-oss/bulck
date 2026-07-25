@@ -1,0 +1,1547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Bulk Burger — قطعة زيادة، طعم زيادة</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Cairo:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --navy:#12213F;
+  --navy-2:#1B2E52;
+  --navy-3:#0B1730;
+  --coral:#E8542C;
+  --coral-2:#FF6B3D;
+  --gold:#F0A73A;
+  --cream:#FBF6ED;
+  --cream-2:#F1E9D8;
+  --ink:#171410;
+  --line:rgba(255,255,255,0.12);
+  --shadow: 0 20px 40px -12px rgba(11,23,48,0.35);
+  --radius: 18px;
+}
+body.dark{
+  --cream:#2f343d;
+  --cream-2:#9ca6bd;
+  --ink:#faf6ee;
+  --text:rgb(219, 219, 219);
+  --navy:#0A1327;
+  --navy-2:#131F3A;
+  --navy-3:#080F20;
+  --line:rgba(255,255,255,0.09);
+  --shadow: 0 20px 40px -12px rgba(0,0,0,0.55);
+}
+body.dark .item-card, body.dark .branch-card, body.dark .addon-chip, body.dark .drawer-foot{
+  background:#152342; border-color:var(--line); color:var(--ink);
+}
+body.dark .item-desc{color:rgba(219, 219, 219, 0.774);}
+body.dark .item-name-ar{color:var(--text);}
+body.dark .price small{color:#7c86a3;}
+body.dark .field input, body.dark .field select, body.dark .field textarea{
+  background:#152342;border-color:var(--line);color:var(--ink);
+}
+body.dark .tab{background:#152342;border-color:var(--line);color:var(--ink);}
+body.dark .modal, body.dark .drawer, body.dark .side-menu{background:var(--cream);}
+body.dark .empty-cart{color:#7c86a3;}
+body.dark .item-icon, body.dark .ci{background:#0E1830;border-color:var(--line);}
+body.dark .addon-chip button{background:#0E1830;color:var(--ink);}
+body.dark .wa-note{background:#152342;border-color:var(--line);color:#9aa3bd;}
+body.dark .sum-row{color:#9aa3bd;}
+
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  font-family:'Inter',sans-serif;
+  background:var(--cream);
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  transition:background .3s, color .3s;
+}
+body.rtl{direction:rtl;}
+body.rtl .arabic{direction:rtl;}
+img{max-width:100%;display:block;}
+.arabic{font-family:'Cairo',sans-serif;direction:rtl;}
+.display{font-family:'Anton',sans-serif;text-transform:uppercase;letter-spacing:0.02em;}
+a{color:inherit;text-decoration:none;}
+button{font-family:inherit;cursor:pointer;border:none;background:none;}
+.wrap{max-width:1140px;margin:0 auto;padding:0 20px;}
+::selection{background:var(--coral);color:#fff;}
+
+/* ---------- NAV ---------- */
+.nav{
+  position:sticky;top:0;z-index:50;
+  background:var(--navy);
+  border-bottom:1px solid var(--line);
+}
+.nav-inner{
+  max-width:1140px;margin:0 auto;padding:14px 20px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.brand{display:flex;align-items:center;gap:10px;}
+.brand-mark{
+  width:38px;height:38px;border-radius:10px;
+  background:linear-gradient(145deg,var(--coral),var(--coral-2));
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Anton',sans-serif;color:#fff;font-size:19px;
+  box-shadow:0 6px 14px -4px rgba(232,84,44,0.6);
+}
+.brand-text{color:#fff;line-height:1;}
+.brand-text .b1{font-family:'Anton',sans-serif;font-size:19px;letter-spacing:0.03em;color:var(--coral-2);}
+.brand-text .b2{font-family:'Anton',sans-serif;font-size:19px;letter-spacing:0.03em;color:#fff;margin-inline-start:4px;}
+.nav-links{display:none;gap:28px;align-items:center;}
+.nav-links a{color:rgba(255,255,255,0.75);font-size:14px;font-weight:600;transition:color .2s;}
+.nav-links a:hover{color:#fff;}
+.cart-btn{
+  position:relative;display:flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.08);
+  border:1px solid var(--line);
+  color:#fff;padding:9px 14px;border-radius:100px;font-size:14px;font-weight:600;
+  transition:background .2s;
+}
+.cart-btn:hover{background:rgba(255,255,255,0.16);}
+.cart-count{
+  position:absolute;top:-6px;right:-6px;
+  background:var(--coral-2);color:#fff;font-size:11px;font-weight:800;
+  width:19px;height:19px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+}
+.nav-actions{display:flex;align-items:center;gap:10px;}
+.icon-btn{
+  width:40px;height:40px;border-radius:50%;
+  background:rgba(255,255,255,0.08);border:1px solid var(--line);
+  color:#fff;display:flex;align-items:center;justify-content:center;font-size:16px;
+  transition:background .2s;flex:0 0 auto;
+}
+.icon-btn:hover{background:rgba(255,255,255,0.18);}
+.hamburger{display:flex;flex-direction:column;justify-content:center;gap:5px;}
+.hamburger span{width:20px;height:2px;background:#fff;border-radius:2px;transition:transform .25s, opacity .2s;}
+@media(max-width:900px){
+  .nav-links{display:none;}
+  .hamburger{display:flex;}
+}
+
+/* ---------- HERO ---------- */
+.hero{
+  position:relative;
+  background-image: url(img.jpeg);
+  width: 100%;
+  height: 100vh;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: cover;
+  color:#fff;
+  padding:56px 0 80px;
+  overflow:hidden;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;
+  background: rgba(0, 0, 0, 0.287);
+  z-index: 1;
+}
+.hero > *{
+  position: relative;
+  z-index: 2;
+}
+.hero-grid{
+  position:relative;z-index:1;
+  display:grid;grid-template-columns:1.1fr 0.9fr;gap:40px;align-items:center;
+}
+@media(max-width:860px){.hero-grid{grid-template-columns:1fr;text-align:center;}}
+.eyebrow{
+  display:inline-flex;align-items:center;gap:8px;
+  background:rgba(255,255,255,0.08);border:1px solid var(--line);
+  padding:7px 14px;border-radius:100px;font-size:12.5px;font-weight:700;
+  letter-spacing:0.06em;color:var(--gold);margin-bottom:22px;
+}
+@media(max-width:860px){.eyebrow{margin-inline:auto;}}
+.hero h1{
+  font-size:clamp(42px,7.5vw,74px);line-height:0.96;color:#fff;
+}
+.hero h1 span{color:var(--coral-2);}
+.hero-arabic{
+  font-family:'Cairo',sans-serif;direction:rtl;font-weight:700;
+  font-size:19px;color:rgba(255,255,255,0.6);margin-top:16px;
+}
+.hero p.sub{
+  font-size:16.5px;color:rgba(255,255,255,0.72);max-width:440px;margin-top:18px;line-height:1.6;
+}
+@media(max-width:860px){.hero p.sub{margin-inline:auto;}}
+.hero-cta{display:flex;gap:14px;margin-top:32px;flex-wrap:wrap;}
+@media(max-width:860px){.hero-cta{justify-content:center;}}
+.btn{
+  padding:15px 26px;border-radius:100px;font-weight:700;font-size:15px;
+  display:inline-flex;align-items:center;gap:8px;transition:transform .15s, box-shadow .15s;
+}
+.btn:active{transform:scale(0.97);}
+.btn-primary{
+  background:var(--coral);color:#fff;
+  box-shadow:0 14px 26px -8px rgba(232,84,44,0.55);
+}
+.btn-primary:hover{box-shadow:0 18px 30px -8px rgba(232,84,44,0.7);}
+.btn-ghost{
+  background:rgba(255,255,255,0.06);color:#fff;border:1px solid rgba(255,255,255,0.25);
+}
+.btn-ghost:hover{background:rgba(255,255,255,0.14);}
+.hero-visual{
+  position:relative;display:flex;justify-content:center;
+}
+.stack-card{
+  position:relative;
+  background:linear-gradient(160deg,var(--navy-2),var(--navy-3));
+  border:1px solid var(--line);
+  border-radius:26px;padding:34px 28px;
+  width:100%;max-width:340px;
+  box-shadow:var(--shadow);
+}
+.stack-card .tag{
+  font-size:11.5px;font-weight:800;letter-spacing:0.08em;color:var(--gold);
+  text-transform:uppercase;margin-bottom:10px;
+}
+.stack-card .big{
+  font-family:'Anton',sans-serif;font-size:56px;color:#fff;line-height:1;
+}
+.stack-card .big small{font-size:20px;color:var(--coral-2);}
+.stack-card .foot{
+  margin-top:18px;font-size:13.5px;color:rgba(255,255,255,0.65);line-height:1.6;
+}
+.stat-row{display:flex;gap:14px;margin-top:22px;}
+.stat{flex:1;background:rgba(255,255,255,0.05);border-radius:14px;padding:12px;text-align:center;}
+.stat b{display:block;font-family:'Anton',sans-serif;font-size:22px;color:#fff;}
+.stat span{font-size:11px;color:rgba(255,255,255,0.55);}
+
+/* MARQUEE */
+.marquee {
+  background: var(--coral);
+  color: #fff;
+  overflow: hidden;
+  white-space: nowrap;
+  padding: 11px 0;
+  /* بيجبر اتجاه الشريط يفضل LTR عشان الأنيميشن يمشى مظبوط في الاتجاهين */
+  direction: ltr !important; 
+}
+
+.marquee-track {
+  display: inline-flex;
+  gap: 40px;
+  animation: scroll 22s linear infinite;
+  font-weight: 800;
+  font-size: 13.5px;
+}
+
+.marquee-track span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@keyframes scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+/* ---------- SECTION HEADS ---------- */
+.section{padding:64px 0;}
+.section-head{margin-bottom:34px;}
+.section-head .kicker{
+  font-size:12.5px;font-weight:800;letter-spacing:0.1em;text-transform:uppercase;color:var(--coral);
+  margin-bottom:8px;display:block;
+}
+.section-head h2{font-size:clamp(28px,4vw,38px);font-family:'Anton',sans-serif;text-transform:uppercase;color:var(--text);}
+
+/* ---------- MENU TABS ---------- */
+.menu-tabs{
+  display:flex;gap:9px;overflow-x:auto;padding-bottom:6px;margin-bottom:30px;
+  scrollbar-width:none;
+}
+.menu-tabs::-webkit-scrollbar{display:none;}
+.tab{
+  flex:0 0 auto;padding:11px 18px;border-radius:100px;font-weight:700;font-size:13.5px;
+  background:#fff;border:1.5px solid var(--cream-2);color:var(--navy);white-space:nowrap;
+  transition:all .2s;
+}
+.tab.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+
+.menu-grid{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:18px;
+}
+.menu-panel{display:none;}
+.menu-panel.active{display:block;}
+
+.item-card{
+  background:#fff;border-radius:var(--radius);padding:18px;
+  border:1px solid var(--cream-2);
+  display:flex;flex-direction:column;gap:10px;
+  transition:box-shadow .2s, transform .2s;
+  position:relative;
+}
+.item-card:hover{box-shadow:var(--shadow);transform:translateY(-3px);}
+.item-top{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;}
+.item-icon{
+  width:52px;height:52px;border-radius:14px;flex:0 0 auto;
+  background:linear-gradient(155deg,var(--cream-2),#fff);
+  display:flex;align-items:center;justify-content:center;font-size:26px;
+  border:1px solid var(--cream-2);
+}
+.item-name{font-weight:800;font-size:15.5px;color:var(--text);line-height:1.3;}
+.item-name-ar{font-family:'Cairo',sans-serif;direction:rtl;font-size:12.5px;color:#9a8f7e;margin-top:2px;font-weight:600;}
+.item-desc{font-size:12.5px;color:#8a8478;line-height:1.5;}
+.item-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px;}
+.price{font-family:'Anton',sans-serif;font-size:20px;color:var(--coral);}
+.price small{font-size:11px;font-family:'Inter',sans-serif;color:#b4ac9d;}
+.old-price{font-size:12px;color:#c2bcae;text-decoration:line-through;margin-inline-end:6px;}
+.add-btn{
+  background:var(--navy);color:#fff;padding:9px 16px;border-radius:100px;font-size:12.5px;font-weight:700;
+  transition:background .2s;
+}
+.add-btn:hover{background:var(--coral);}
+.badge{
+  position:absolute;top:-8px;left:14px;background:var(--gold);color:var(--navy-3);
+  font-size:10.5px;font-weight:800;padding:4px 10px;border-radius:100px;letter-spacing:0.03em;
+}
+
+/* ---------- ADD-ONS strip ---------- */
+.addon-strip{
+  display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px;
+}
+.addon-chip{
+  background:#fff;border:1px solid var(--cream-2);border-radius:14px;padding:14px;
+  display:flex;justify-content:space-between;align-items:center;gap:8px;
+}
+.addon-chip .nm{font-size:13px;font-weight:700;color:var(--navy);}
+.addon-chip .nm-ar{font-family:'Cairo',sans-serif;direction:rtl;font-size:11px;color:#a39a89;}
+.addon-chip button{
+  width:30px;height:30px;border-radius:50%;background:var(--cream-2);color:var(--navy);font-weight:800;flex:0 0 auto;
+}
+.addon-chip button:hover{background:var(--coral);color:#fff;}
+
+/* ---------- WHY / FEATURES ---------- */
+.features{background:var(--navy);color:#fff;}
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:22px;}
+.feat{padding:6px;}
+.feat .ic{
+  width:46px;height:46px;border-radius:13px;background:rgba(232,84,44,0.18);
+  display:flex;align-items:center;justify-content:center;font-size:22px;margin-bottom:14px;
+}
+.feat h3{font-size:16.5px;margin-bottom:8px;}
+.feat p{font-size:13.5px;color:rgba(255,255,255,0.6);line-height:1.6;}
+
+/* ---------- BRANCHES ---------- */
+.branch-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px;}
+.branch-card{
+  background:#fff;border-radius:var(--radius);padding:22px;border:1px solid var(--cream-2);
+}
+.branch-card .bh{display:flex;align-items:center;gap:10px;margin-bottom:12px;}
+.branch-card .num{
+  width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;font-family:'Anton',sans-serif;
+  display:flex;align-items:center;justify-content:center;font-size:14px;
+}
+.branch-card h3{font-size:15.5px;color:var(--text);}
+.branch-card .addr{font-size:13px;color:#9c968b;margin-bottom:12px;line-height:1.5;}
+.branch-card .addr-ar{font-family:'Cairo',sans-serif;direction:rtl;font-size:13px;color:#c2bbad;margin-bottom:12px;}
+.branch-card .phones{display:flex;flex-direction:column;gap:6px;}
+.branch-card .phones a{font-size:13px;color:var(--coral);font-weight:700;}
+
+/* ---------- CART DRAWER ---------- */
+.overlay{
+  position:fixed;inset:0;background:rgba(11,23,48,0.55);backdrop-filter:blur(2px);
+  z-index:80;opacity:0;pointer-events:none;transition:opacity .25s;
+}
+.overlay.show{opacity:1;pointer-events:auto;}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(420px,92vw);
+  background:var(--cream);z-index:90;
+  transform:translateX(100%);transition:transform .3s ease;
+  display:flex;flex-direction:column;
+  box-shadow:-20px 0 40px rgba(0,0,0,0.15);
+}
+.drawer.show{transform:translateX(0);}
+.drawer-head{
+  padding:20px;border-bottom:1px solid var(--cream-2);display:flex;justify-content:space-between;align-items:center;
+  background:var(--navy);color:#fff;
+}
+.drawer-head h3{font-family:'Anton',sans-serif;font-size:18px;letter-spacing:0.02em;}
+.close-x{width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,0.1);color:#fff;font-size:18px;display:flex;align-items:center;justify-content:center;}
+.close-x:hover{background:rgba(255,255,255,0.2);}
+.drawer-body{flex:1;overflow-y:auto;padding:16px 20px;}
+.cart-line{
+  display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--cream-2);align-items:center;
+}
+.cart-line .ci{
+  width:44px;height:44px;border-radius:12px;background:#fff;border:1px solid var(--cream-2);
+  display:flex;align-items:center;justify-content:center;font-size:20px;flex:0 0 auto;
+}
+.cart-line .info{flex:1;min-width:0;}
+.cart-line .nm{font-size:13.5px;font-weight:700;color:var(--text);}
+.cart-line .pp{font-size:12.5px;color:#a8a091;}
+.qty-ctrl{display:flex;align-items:center;gap:8px;}
+.qty-ctrl button{
+  width:26px;height:26px;border-radius:8px;background:var(--cream-2);color:var(--navy);font-weight:800;
+}
+.qty-ctrl button:hover{background:var(--coral);color:#fff;}
+.qty-ctrl span{font-size:13px;font-weight:700;min-width:16px;text-align:center;}
+.line-total{font-size:13.5px;font-weight:800;color:var(--text);min-width:52px;text-align:right;}
+.empty-cart{text-align:center;padding:60px 20px;color:#a8a091;}
+.empty-cart .ic{font-size:44px;margin-bottom:14px;}
+.drawer-foot{padding:18px 20px;border-top:1px solid var(--cream-2);background:#fff;}
+.sum-row{display:flex;justify-content:space-between;font-size:13.5px;color:#7d7668;margin-bottom:8px;}
+.sum-row.total{font-size:17px;font-weight:800;color:var(--navy);margin-top:10px;}
+.checkout-btn{
+  width:100%;background:var(--coral);color:#fff;padding:15px;border-radius:100px;font-weight:800;font-size:15px;
+  margin-top:14px;box-shadow:0 12px 24px -8px rgba(232,84,44,0.55);
+}
+.checkout-btn:disabled{background:#d8d2c4;box-shadow:none;cursor:not-allowed;}
+
+/* ---------- LEFT SIDE MENU ---------- */
+.side-menu{
+  position:fixed;top:0;left:0;height:100%;width:min(320px,84vw);
+  background:var(--navy);color:#fff;z-index:90;
+  transform:translateX(-100%);transition:transform .3s ease;
+  display:flex;flex-direction:column;
+  box-shadow:20px 0 40px rgba(0,0,0,0.15);
+}
+.side-menu.show{transform:translateX(0);}
+.side-menu-head{
+  padding:22px 20px;display:flex;justify-content:space-between;align-items:center;
+  border-bottom:1px solid var(--line);
+}
+.side-menu-head .brand-text .b1, .side-menu-head .brand-text .b2{font-size:17px;}
+.side-menu-links{padding:14px 10px;display:flex;flex-direction:column;gap:2px;flex:1;}
+.side-menu-links a, .side-menu-links button{
+  display:flex;align-items:center;gap:14px;
+  padding:14px 14px;border-radius:14px;
+  color:rgba(255,255,255,0.85);font-size:15px;font-weight:700;
+  transition:background .2s;text-align:left;width:100%;
+}
+.side-menu-links a:hover, .side-menu-links button:hover{background:rgba(255,255,255,0.08);color:#fff;}
+.side-menu-links .ic{width:22px;text-align:center;font-size:17px;}
+.side-menu-foot{padding:18px 20px;border-top:1px solid var(--line);font-size:12px;color:rgba(255,255,255,0.45);}
+
+/* ---------- SETTINGS ---------- */
+.settings-section{padding:6px 0 14px;border-bottom:1px solid var(--cream-2);margin-bottom:18px;}
+.settings-section:last-child{border-bottom:none;}
+.settings-section h4{font-size:13px;font-weight:800;letter-spacing:0.04em;text-transform:uppercase;color:var(--coral);margin-bottom:14px;}
+.opt-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;}
+.opt-row .lbl{font-size:14px;font-weight:700;color:var(--text);}
+.opt-row .desc{font-size:12px;color:#a8a091;margin-top:2px;}
+.toggle-sw{
+  width:46px;height:26px;border-radius:100px;background:var(--cream-2);position:relative;flex:0 0 auto;
+  transition:background .2s;
+}
+.toggle-sw::after{
+  content:"";position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:#fff;
+  transition:transform .2s;box-shadow:0 2px 4px rgba(0,0,0,0.2);
+}
+.toggle-sw.on{background:var(--coral);}
+.toggle-sw.on::after{transform:translateX(20px);}
+.lang-seg{display:flex;gap:8px;}
+.lang-seg button{
+  flex:1;padding:12px;border-radius:12px;border:1.5px solid var(--cream-2);background:#fff;font-weight:700;font-size:13.5px;color:var(--navy);
+}
+.lang-seg button.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.addr-list{display:flex;flex-direction:column;gap:10px;margin-bottom:12px;}
+.addr-item{
+  display:flex;justify-content:space-between;align-items:center;gap:10px;
+  background:#d5d5d5;border:1px solid var(--cream-2);border-radius:12px;padding:12px 14px;
+}
+.addr-item .at{font-size:13px;font-weight:700;color:var(--navy);}
+.addr-item .ad{font-size:12px;color:#a8a091;margin-top:2px;}
+.addr-item button{color:var(--coral);font-size:12px;font-weight:800;}
+.add-addr-row{display:flex;gap:8px;}
+.add-addr-row input{flex:1;}
+.add-addr-row button{
+  background:var(--navy);color:#fff;padding:0 16px;border-radius:12px;font-weight:700;font-size:13px;flex:0 0 auto;
+}
+
+/* ---------- CHECKOUT MODAL ---------- */
+.modal-overlay{
+  position:fixed;inset:0;background:rgba(11,23,48,0.6);z-index:95;display:none;
+  align-items:flex-end;justify-content:center;
+}
+.modal-overlay.show{display:flex;}
+@media(min-width:700px){.modal-overlay{align-items:center;}}
+.modal{
+  background:var(--cream);width:100%;max-width:480px;max-height:92vh;overflow-y:auto;
+  border-radius:24px 24px 0 0;padding:26px 22px 30px;
+  animation:slideUp .3s ease;
+}
+@media(min-width:700px){.modal{border-radius:24px;}}
+@keyframes slideUp{from{transform:translateY(30px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+.modal h3{font-family:'Anton',sans-serif;font-size:22px;color:var(--text);margin-bottom:4px;}
+.modal .msub{font-size:13px;color:#d2c8b5;margin-bottom:20px;}
+.field{margin-bottom:14px;}
+.field label{font-size:12.5px;font-weight:700;color:var(--text);display:block;margin-bottom:6px;}
+.field input, .field select, .field textarea{
+  width:100%;padding:12px 14px;border-radius:12px;border:1.5px solid var(--cream-2);
+  font-family:inherit;font-size:14px;background:#fff;color:var(--ink);
+}
+.field input:focus, .field select:focus, .field textarea:focus{outline:2px solid var(--coral);outline-offset:1px;border-color:var(--coral);}
+.field-error{
+  font-size:11.5px;color:#E23434;font-weight:600;margin-top:5px;min-height:0;display:none;
+}
+.field-error.show{display:block;}
+.field input.invalid, .field select.invalid, .field textarea.invalid{
+  border-color:#E23434;background:rgba(226,52,52,0.04);
+}
+.seg{display:flex;gap:8px;}
+.seg button{
+  flex:1;padding:11px;border-radius:12px;border:1.5px solid var(--cream-2);background:#fff;font-weight:700;font-size:13px;color:var(--navy);
+}
+.seg button.active{background:var(--navy);color:#fff;border-color:var(--navy);}
+.place-order-btn{
+  width:100%;background:var(--navy);color:#fff;padding:16px;border-radius:100px;font-weight:800;font-size:15.5px;margin-top:10px;
+}
+.place-order-btn:hover{background:var(--coral);}
+.wa-note{
+  display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid var(--cream-2);border-radius:14px;padding:12px 14px;margin-top:16px;font-size:12px;color:#8a8478;line-height:1.55;
+}
+
+/* ---------- CONFIRMATION ---------- */
+.confirm-box{text-align:center;padding:10px 4px 4px;}
+.confirm-box .ic{
+  width:70px;height:70px;border-radius:50%;background:rgba(232,84,44,0.12);color:var(--coral);
+  display:flex;align-items:center;justify-content:center;font-size:34px;margin:0 auto 18px;
+}
+.confirm-box h3{font-size:22px;margin-bottom:8px;}
+.confirm-box p{font-size:13.5px;color:#8a8478;margin-bottom:20px;line-height:1.6;}
+.order-id{
+  background:#fff;border:1.5px dashed var(--coral);border-radius:14px;padding:14px;font-family:'Anton',sans-serif;
+  font-size:20px;color:var(--navy);letter-spacing:0.05em;margin-bottom:20px;
+}
+
+/* ---------- MOBILE STICKY BAR ---------- */
+.sticky-cart{
+  position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:60;
+  width:min(92%,420px);
+  background:var(--navy);color:#fff;border-radius:100px;
+  padding:12px 10px 12px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;
+  box-shadow:0 18px 34px -10px rgba(11,23,48,0.5);
+  opacity:0;pointer-events:none;transform:translateX(-50%) translateY(20px);transition:all .3s;
+}
+.sticky-cart.show{opacity:1;pointer-events:auto;transform:translateX(-50%) translateY(0);}
+.sticky-cart .info{font-size:13px;}
+.sticky-cart .info b{font-family:'Anton',sans-serif;font-size:15px;display:block;color:var(--gold);}
+.sticky-cart button{
+  background:var(--coral);color:#fff;padding:11px 20px;border-radius:100px;font-weight:800;font-size:13.5px;
+}
+
+/* ---------- FOOTER ---------- */
+footer{background:var(--navy-3);color:rgba(255,255,255,0.6);padding:44px 0 100px;}
+.foot-grid{display:flex;flex-wrap:wrap;gap:30px;justify-content:space-between;align-items:flex-start;}
+.foot-brand{color:#fff;}
+.foot-links{display:flex;gap:26px;flex-wrap:wrap;}
+.foot-links a{font-size:13.5px;}
+.foot-links a:hover{color:#fff;}
+.foot-bottom{
+  margin-top:34px;padding-top:20px;border-top:1px solid rgba(255,255,255,0.08);
+  font-size:12px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;
+}
+@media(min-width:900px){footer{padding-bottom:44px;}}
+
+.toast{
+  position:fixed;top:80px;left:50%;transform:translateX(-50%) translateY(-14px);
+  background:var(--navy);color:#fff;padding:12px 20px;border-radius:100px;font-size:13.5px;font-weight:700;
+  z-index:120;opacity:0;pointer-events:none;transition:all .3s;box-shadow:var(--shadow);
+  display:flex;align-items:center;gap:8px;
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+@media(max-width:640px){
+  .section{padding:44px 0;}
+  .wrap{padding:0 16px;}
+}
+.sto{
+  color: rgba(0, 0, 0, 0.881);
+}
+.sp{
+  color: rgba(0, 0, 0, 0.664);
+  font-size: .9rem;
+}
+p.desc{
+  font-size: .8rem;
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-inner">
+    <button class="icon-btn hamburger" id="hamburgerBtn" onclick="openSideMenu()" aria-label="Open menu">
+      <span></span><span></span><span></span>
+    </button>
+    <a href="#top" class="brand">
+      <div class="brand-mark">B</div>
+      <div class="brand-text"><span class="b1">BULK</span><span class="b2">BURGER</span></div>
+    </a>
+    <div class="nav-links">
+      <a href="#menu" data-i18n="navMenu">Menu</a>
+      <a href="#why" data-i18n="navWhy">Why Us</a>
+      <a href="#branches" data-i18n="navBranches">Branches</a>
+    </div>
+    <div class="nav-actions">
+      <button class="icon-btn" onclick="openSettings()" aria-label="Settings">⚙️</button>
+      <button class="cart-btn" onclick="openCart()">
+        🛍️ <span data-i18n="navCart">Cart</span> <span class="cart-count" id="navCartCount">0</span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<!-- LEFT SIDE MENU -->
+<div class="side-menu" id="sideMenu">
+  <div class="side-menu-head">
+    <div class="brand">
+      <div class="brand-mark">B</div>
+      <div class="brand-text"><span class="b1">BULK</span><span class="b2">BURGER</span></div>
+    </div>
+    <button class="close-x" onclick="closeSideMenu()">✕</button>
+  </div>
+  <div class="side-menu-links">
+    <a href="#menu" onclick="closeSideMenu()"><span class="ic">📋</span> <span data-i18n="navMenu">Menu</span></a>
+    <a href="#why" onclick="closeSideMenu()"><span class="ic">⭐</span> <span data-i18n="navWhy">Why Us</span></a>
+    <a href="#branches" onclick="closeSideMenu()"><span class="ic">📍</span> <span data-i18n="navBranches">Branches</span></a>
+    <button onclick="closeSideMenu();openCart();"><span class="ic">🛍️</span> <span data-i18n="navCart">Cart</span></button>
+    <button onclick="closeSideMenu();openSettings();"><span class="ic">⚙️</span> <span data-i18n="navSettings">Settings</span></button>
+  </div>
+  <div class="side-menu-foot">Bulk Burger — Cairo</div>
+</div>
+
+<!-- HERO -->
+<header class="hero" id="top">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow" data-i18n="heroEyebrow">🔥 كايرو's biggest bite since day one</span>
+      <h1 class="display" data-i18n-html="heroTitle">More<br>bulk<br><span>More flavor</span></h1>
+      <p class="hero-arabic">قطعة زيادة، طعم زيادة</p>
+      <p class="sub" data-i18n="heroSub">Smashed beef, crispy fried chicken, and stacked sandwiches — built double, priced fair, delivered fast across Cairo.</p>
+      <div class="hero-cta">
+        <a href="#menu" class="btn btn-primary" data-i18n="heroCta1">📋 View Full Menu</a>
+        <a href="#branches" class="btn btn-ghost" data-i18n="heroCta2">📍 Find a Branch</a>
+      </div>
+    </div>
+    </div>
+  </div>
+</header>
+
+<div class="marquee"><div class="marquee-track" id="marqueeTrack"></div></div>
+
+<!-- MENU -->
+<section class="section" id="menu">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker" data-i18n="menuKicker">The Menu</span>
+      <h2 data-i18n="menuTitle">Pick Your Bulk</h2>
+    </div>
+
+    <div class="menu-tabs" id="menuTabs"></div>
+    <div id="menuPanels"></div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section class="section features" id="why">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker" style="color:var(--gold)" data-i18n="whyKicker">The Bulk Standard</span>
+      <h2 style="color:#fff" data-i18n="whyTitle">Why People Come Back</h2>
+    </div>
+    <div class="feat-grid">
+      <div class="feat">
+        <div class="ic">🥩</div>
+        <h3 data-i18n="feat1h">Fresh, never frozen</h3>
+        <p data-i18n="feat1p">Patties and chicken are prepped daily at every branch — no shortcuts in the kitchen.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">⚡</div>
+        <h3 data-i18n="feat2h">Fast delivery</h3>
+        <p data-i18n="feat2p">Dedicated delivery lines at each branch get your order moving the minute it's confirmed.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">💰</div>
+        <h3 data-i18n="feat3h">Real portions, fair prices</h3>
+        <p data-i18n="feat3p">Bulk-sized combos built for actual hunger, priced for every day — not just payday.</p>
+      </div>
+      <div class="feat">
+        <div class="ic">📍</div>
+        <h3 data-i18n="feat4h">3 branches across Cairo</h3>
+        <p data-i18n="feat4p">Faisal, El Ashreen, and Embaba — order from whichever is closest to you.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BRANCHES -->
+<section class="section" id="branches">
+  <div class="wrap">
+    <div class="section-head">
+      <span class="kicker" data-i18n="branchesKicker">Find Us</span>
+      <h2 data-i18n="branchesTitle">Our Branches</h2>
+    </div>
+    <div class="branch-grid">
+      <div class="branch-card">
+        <div class="bh"><div class="num">1</div><h3>Faisal — Main Branch</h3></div>
+        <div class="addr-ar">198 شارع فيصل، ميدان الطوابق، أول شارع المنشية</div>
+        <div class="phones">
+          <a href="tel:01124947222">01124947222</a>
+          <a href="tel:01124948222">01124948222</a>
+          <a href="tel:01124950666">01124950666</a>
+          <a href="tel:01124944555">01124944555</a>
+        </div>
+      </div>
+      <div class="branch-card">
+        <div class="bh"><div class="num">2</div><h3>El Ashreen</h3></div>
+        <div class="addr-ar">ميدان فيصل، المساكن، أمام وحدة المطافي</div>
+        <div class="phones">
+          <a href="tel:01110280555">01110280555</a>
+          <a href="tel:01101069797">01101069797</a>
+          <a href="tel:01124646498">01124646498</a>
+        </div>
+      </div>
+      <div class="branch-card">
+        <div class="bh"><div class="num">3</div><h3>Embaba</h3></div>
+        <div class="addr-ar">ميدان جامع فلفل، شارع بشتيل، امبابة</div>
+        <div class="phones">
+          <a href="tel:01014383888">01014383888</a>
+          <a href="tel:01040723237">01040723237</a>
+          <a href="tel:01145480222">01145480222</a>
+          <a href="tel:01141653939">01141653939</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="brand" style="margin-bottom:10px;">
+          <div class="brand-mark">B</div>
+          <div class="brand-text"><span class="b1">BULK</span><span class="b2">BURGER</span></div>
+        </div>
+        <p style="max-width:260px;font-size:13px;" data-i18n="footTagline">Cairo's bulk-sized burgers, chicken and combos. Order online or call your nearest branch.</p>
+      </div>
+      <div class="foot-links">
+        <a href="#menu">Menu</a>
+        <a href="#why">Why Us</a>
+        <a href="#branches">Branches</a>
+        <a href="tel:01153500222">Head Office: 01153500222</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>© 2026 Bulk Burger. All rights reserved.</span>
+      <span>Made for hungry Cairo.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- STICKY MOBILE CART -->
+<div class="sticky-cart" id="stickyCart">
+  <div class="info"><b id="stickyTotal">0 EGP</b><span id="stickyCount">0 items</span></div>
+  <button onclick="openCart()">View Cart →</button>
+</div>
+
+<!-- CART DRAWER -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+<div class="overlay" id="sideOverlay" onclick="closeSideMenu()"></div>
+<div class="drawer" id="drawer">
+  <div class="drawer-head">
+    <h3 data-i18n="cartTitle">Your Order</h3>
+    <button class="close-x" onclick="closeCart()">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot">
+    <div class="sum-row"><span data-i18n="cartSubtotal">Subtotal</span><span id="sumSubtotal">0 EGP</span></div>
+    <div class="sum-row"><span data-i18n="cartDelivery">Delivery</span><span id="sumDelivery">15 EGP</span></div>
+    <div class="sum-row total"><span data-i18n="cartTotal">Total</span><span id="sumTotal">0 EGP</span></div>
+    <button class="checkout-btn" id="checkoutBtn" onclick="openCheckout()" disabled>Add items to checkout</button>
+  </div>
+</div>
+
+<!-- CHECKOUT MODAL -->
+<div class="modal-overlay" id="checkoutOverlay">
+  <div class="modal" id="checkoutModal">
+    <div id="checkoutFormWrap">
+      <h3 data-i18n="checkoutTitle">Checkout</h3>
+      <p class="msub" data-i18n="checkoutSub">Fill in your details — pay cash when your order arrives.</p>
+      <div class="field">
+        <label data-i18n="lblName">Full name</label>
+        <input type="text" id="custName" placeholder="e.g. Ahmed Mostafa">
+        <div class="field-error" id="errName"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="lblPhone">Phone number</label>
+        <input type="tel" id="custPhone" placeholder="01xxxxxxxxx" maxlength="12" inputmode="numeric">
+        <div class="field-error" id="errPhone"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="lblOrderType">Order type</label>
+        <div class="seg">
+          <button type="button" class="active" id="segDelivery" onclick="setOrderType('delivery')" data-i18n="segDelivery">🛵 Delivery</button>
+          <button type="button" id="segPickup" onclick="setOrderType('pickup')" data-i18n="segPickup">🏪 Pickup</button>
+        </div>
+      </div>
+      <div class="field" id="addressField">
+        <label data-i18n="lblAddress">Delivery address</label>
+        <select id="savedAddrSelect" style="margin-bottom:8px;" onchange="pickSavedAddress()">
+          <option value="" data-i18n="addrSelectNew">+ Enter a new address</option>
+        </select>
+        <textarea id="custAddress" rows="2" placeholder="Street, building, area..."></textarea>
+        <div class="field-error" id="errAddress"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="lblBranch">Nearest branch</label>
+        <select id="custBranch">
+          <option value="" data-i18n="branchPlaceholder">Select a branch...</option>
+          <option value="Faisal — Main Branch">Faisal — Main Branch</option>
+          <option value="El Ashreen">El Ashreen</option>
+          <option value="Embaba">Embaba</option>
+        </select>
+        <div class="field-error" id="errBranch"></div>
+      </div>
+      <div class="field">
+        <label data-i18n="lblNotes">Notes (optional)</label>
+        <input type="text" id="custNotes" placeholder="Extra sauce, no onions, etc.">
+      </div>
+      <button class="place-order-btn" onclick="placeOrder()"><span data-i18n="placeOrderBtn">Place Order —</span> <span id="checkoutTotalBtn">0 EGP</span></button>
+      <div class="wa-note" data-i18n="waNote">💬 Prefer WhatsApp? After placing your order you can also send it straight to the branch in one tap.</div>
+    </div>
+    <div id="confirmWrap" style="display:none;">
+      <div class="confirm-box">
+        <div class="ic">✓</div>
+        <h3 data-i18n="orderPlaced">Order Placed!</h3>
+        <p><span id="confirmThanksTxt">Thanks</span><span id="confirmName"></span> <span id="confirmMsg1Txt">— your order has been sent to</span> <b id="confirmBranch"></b>. <span id="confirmMsg2Txt">Pay cash on</span> <span id="confirmMode"></span>.</p>
+        <div class="order-id" id="orderIdBox">#BB-0000</div>
+        <a class="btn btn-primary" style="width:100%;justify-content:center;margin-bottom:10px;" id="waLink" target="_blank"><span data-i18n="waSend">💬 Send order via WhatsApp</span></a>
+        <button class="btn btn-ghost" style="width:100%;justify-content:center;background:var(--cream-2);color:var(--navy);" onclick="closeAll();resetCart();" data-i18n="confirmDone">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SETTINGS MODAL -->
+<div class="modal-overlay" id="settingsOverlay">
+  <div class="modal" id="settingsModal">
+    <h3 data-i18n="settingsTitle">Settings</h3>
+    <p class="msub" data-i18n="settingsSub">Manage your language, appearance and saved addresses.</p>
+
+    <div class="settings-section">
+      <h4 data-i18n="settingsLanguage">Language</h4>
+      <div class="lang-seg">
+        <button type="button" id="langEnBtn" class="active" onclick="setLang('en')">English</button>
+        <button type="button" id="langArBtn" onclick="setLang('ar')">العربية</button>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4 data-i18n="settingsAppearance">Appearance</h4>
+      <div class="opt-row">
+        <div>
+          <div class="lbl" data-i18n="settingsDark">Dark mode</div>
+          <div class="desc" data-i18n="settingsDarkDesc">Easier on the eyes at night</div>
+        </div>
+        <div class="toggle-sw" id="darkToggle" onclick="toggleDark()"></div>
+      </div>
+      <div class="opt-row">
+        <div>
+          <div class="lbl" data-i18n="settingsPromo">Promo notifications</div>
+          <div class="desc" data-i18n="settingsPromoDesc">Deals and new menu alerts</div>
+        </div>
+        <div class="toggle-sw on" id="promoToggle" onclick="togglePromo()"></div>
+      </div>
+    </div>
+
+    <div class="settings-section">
+      <h4 data-i18n="settingsAddresses">Saved addresses</h4>
+      <div class="addr-list" id="addrList"></div>
+      <p class="desc" data-i18n="settingsAddrHint" style="margin-top:2px;">Addresses you enter at checkout are saved here automatically.</p>
+    </div>
+
+    <button class="place-order-btn" onclick="closeSettings()" data-i18n="settingsDone">Done</button>
+  </div>
+</div>
+
+<div class="toast" id="toast">✓ Added to cart</div>
+
+<script>
+/* ---------------- MENU DATA ---------------- */
+const MENU = {
+  beef: {
+    label: "Beef Burgers", labelAr:"برجر لحم", icon:"🍔",
+    items: [
+      {id:"b1", name:"Original Beef Burger", ar:"اورجينال لحم", price:70, desc:"Beef patty, cheese, lettuce, tomato, pickles."},
+      {id:"b2", name:"Royal Beef Burger", ar:"رويال لحم", price:75, desc:"Grilled beef patty, cheese, onion, mustard, mayo, pickles."},
+      {id:"b3", name:"Balak Beef Burger", ar:"بالك لحم", price:80, desc:"Mozzarella-stuffed beef, tomato, onion, mushroom sauce, smoked turkey, BBQ, mayo."},
+      {id:"b4", name:"Deal Balak Beef", ar:"ديل بالك لحم", price:120, desc:"Double mozzarella beef patties, cheese, tomato, onion, mushroom sauce, smoked turkey."},
+      {id:"b5", name:"Triple Balak Beef", ar:"تريبل بالك لحم", price:160, desc:"Triple mozzarella-stuffed beef, cheese, onion, mushroom sauce, mayo, BBQ."},
+    ]
+  },
+  chicken: {
+    label:"Chicken Burgers", labelAr:"برجر تشيكن", icon:"🐔",
+    items:[
+      {id:"c1", name:"Original Chicken Burger", ar:"اورجينال تشيكن", price:70, desc:"Crispy chicken fillet, cheese, lettuce, tomato."},
+      {id:"c2", name:"Royal Chicken Burger", ar:"رويال تشيكن", price:80, desc:"Crispy chicken fillet, cheese, tomato, lettuce, iceberg sauce."},
+      {id:"c3", name:"Balak Chicken Burger", ar:"بالك تشيكن", price:85, desc:"Crispy chicken, cheese, smoked turkey, mushroom sauce, iceberg sauce, tomato."},
+      {id:"c4", name:"Deal Balak Chicken", ar:"ديل بالك تشيكن", price:130, desc:"Double crispy chicken, turkey, mushroom sauce, iceberg, tomato."},
+      {id:"c5", name:"Mix Meat & Chicken", ar:"ميكس لحمة وفراخ", price:140, desc:"Crispy chicken fillet + beef patty, cheese, turkey, mushroom sauce, iceberg, tomato."},
+      {id:"c6", name:"Triple Balak Chicken", ar:"تريبل بالك تشيكن", price:169, desc:"Triple crispy chicken, cheese, turkey, mushroom sauce, iceberg, tomato."},
+    ]
+  },
+  meals: {
+    label:"Chicken Meals", labelAr:"وجبات فراخ", icon:"🍗",
+    items:[
+      {id:"m1", name:"2-Piece Chicken Meal", ar:"قطعتين فراخ", price:70, oldPrice:89, desc:"2 fried chicken pieces + fries + 2 bread + 2 sauce cups + drink."},
+      {id:"m2", name:"3-Piece Chicken Meal", ar:"3 قطع فراخ", price:100, oldPrice:119, desc:"3 fried chicken pieces + fries + 3 bread + 3 sauce cups + drink."},
+      {id:"m3", name:"5-Piece Chicken Meal", ar:"5 قطع فراخ", price:150, oldPrice:169, desc:"5 fried chicken pieces + fries + 5 bread + 5 sauce cups + drink."},
+      {id:"m4", name:"8-Piece Chicken Bucket", ar:"8 قطع فراخ", price:280, oldPrice:299, desc:"8 fried chicken pieces + fries + 8 bread + 8 sauce cups + 1L drink.", badge:"Best Value"},
+      {id:"m5", name:"Chicken Day Meal", ar:"وجبة تشيكن يوم", price:160, desc:"3 chicken strips + fries + 3 mini burgers + cheddar cup + BBQ cup + drink."},
+    ]
+  },
+  sandwich: {
+    label:"Sandwiches", labelAr:"حواوشي", icon:"🥙",
+    items:[
+      {id:"s1", name:"Hawawshi — Beef", ar:"رغيف حواوشي لحم", price:25, desc:"Spiced minced beef baked in fresh bread."},
+      {id:"s2", name:"Hawawshi Deal — Beef", ar:"ديل بالك لحم حواوشي", price:120, desc:"2 mozzarella-stuffed beef hawawshi pieces, cheese, onion, tomato, smoked turkey."},
+      {id:"s3", name:"Hawawshi Triple — Beef", ar:"تريبل بالك لحم حواوشي", price:160, desc:"Triple mozzarella-stuffed beef hawawshi, cheese, onion, tomato, smoked turkey."},
+    ]
+  },
+  addons: {
+    label:"Add-ons", labelAr:"إضافات", icon:"➕",
+    items:[
+      {id:"a1", name:"Smoked Turkey / Roast Beef", ar:"تركي مدخن أو روز بيف", price:20, desc:""},
+      {id:"a2", name:"Extra Burger or Chicken Piece", ar:"قطعة برجر أو تشيكن", price:50, desc:""},
+      {id:"a3", name:"Large Fries", ar:"باكيت بطاطس كبير", price:40, desc:""},
+      {id:"a4", name:"Sauce Cup", ar:"كب صوص", price:10, desc:""},
+      {id:"a5", name:"Burger Bun", ar:"قطعة عيش برجر", price:10, desc:""},
+      {id:"a6", name:"Extra Cheese", ar:"قطعة جبنة", price:5, desc:""},
+    ]
+  }
+};
+
+const MARQUEE = {
+  en: ["🔥 8-PIECE BUCKET — 280 EGP", "🍔 TRIPLE BALAK BEEF — 160 EGP", "🐔 FREE DELIVERY OVER 200 EGP*", "🥙 HAWAWSHI FROM 25 EGP", "🛵 3 BRANCHES ACROSS CAIRO"],
+  ar: ["🔥 باكت 8 قطع — 280 جنيه", "🍔 تريبل بالك لحم — 160 جنيه", "🐔 توصيل مجاني للطلبات فوق 200 جنيه*", "🥙 حواوشي يبدأ من 25 جنيه", "🛵 3 فروع في خدمتكم بالقاهرة"]
+};
+
+const ICONS = {beef:"🍔", chicken:"🍗", meals:"🍱", sandwich:"🥙", addons:"➕"};
+let cart = {}; 
+let currentLang = 'en';
+let orderType = 'delivery';
+let orderCounter = Math.floor(1000 + Math.random() * 9000);
+
+/* ---------------- LOCAL STORAGE MANAGEMENT ---------------- */
+function saveCart() {
+  try {
+    localStorage.setItem('bulkburger_cart', JSON.stringify(cart));
+  } catch(e) {}
+}
+
+function loadCart() {
+  try {
+    const raw = localStorage.getItem('bulkburger_cart');
+    if (!raw) return;
+    const saved = JSON.parse(raw);
+    if (saved && typeof saved === 'object') {
+      cart = saved;
+    }
+  } catch(e) {}
+}
+
+function loadAddresses() {
+  try {
+    const raw = localStorage.getItem('bulkburger_addrs');
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return [];
+}
+
+function saveAddresses() {
+  try { 
+    localStorage.setItem('bulkburger_addrs', JSON.stringify(addresses)); 
+  } catch(e) {}
+}
+
+let addresses = loadAddresses();
+
+function removeAddress(i) {
+  addresses.splice(i, 1);
+  saveAddresses();
+  renderAddresses();
+  populateSavedAddrSelect();
+}
+
+function saveAddressIfNew(text) {
+  const clean = text.trim();
+  if(!clean) return;
+  const exists = addresses.some(a => a.text.toLowerCase() === clean.toLowerCase());
+  if(!exists){
+    addresses.push({ label: (t('addrLabelPrefix') + ' ' + (addresses.length + 1)), text: clean });
+    saveAddresses();
+    populateSavedAddrSelect();
+    renderAddresses();
+  }
+}
+
+function renderAddresses() {
+  const container = document.getElementById('addrList');
+  if (!container) return;
+
+  if (addresses.length === 0) {
+    container.innerHTML = `<p class="desc">${t('noAddresses')}</p>`;
+    return;
+  }
+  
+  container.innerHTML = addresses.map((a, i) => `
+    <div class="addr-item">
+      <span class="sp"><strong class="sto">${t('addrLabelPrefix')}:</strong><br>${a.text}</span>
+      <button onclick="removeAddress(${i})">${t('removeAddr')}</button>
+    </div>
+  `).join('');
+}
+
+function populateSavedAddrSelect() {
+  const sel = document.getElementById('savedAddrSelect');
+  if(!sel) return;
+  const current = sel.value;
+  sel.innerHTML = `<option value="">${t('addrSelectNew')}</option>` +
+    addresses.map((a, i) => `<option value="${i}">${a.label} — ${a.text}</option>`).join('');
+  sel.value = addresses[current] ? current : '';
+}
+
+function pickSavedAddress() {
+  const sel = document.getElementById('savedAddrSelect');
+  const idx = sel.value;
+  document.getElementById('custAddress').value = idx === '' ? '' : addresses[idx].text;
+}
+
+/* ---------------- RENDER MENU ---------------- */
+const tabsEl = document.getElementById('menuTabs');
+const panelsEl = document.getElementById('menuPanels');
+const catKeys = Object.keys(MENU);
+
+if (tabsEl && panelsEl) {
+  catKeys.forEach((key, i) => {
+    const cat = MENU[key];
+    const tab = document.createElement('button');
+    tab.className = 'tab' + (i === 0 ? ' active' : '');
+    tab.textContent = cat.icon + ' ' + cat.label;
+    tab.dataset.catkey = key;
+    tab.onclick = () => switchTab(key);
+    tab.dataset.key = key;
+    tabsEl.appendChild(tab);
+
+    const panel = document.createElement('div');
+    panel.className = 'menu-panel' + (i === 0 ? ' active' : '');
+    panel.id = 'panel-' + key;
+    const grid = document.createElement('div');
+    grid.className = key === 'addons' ? 'addon-strip' : 'menu-grid';
+
+    cat.items.forEach(item => {
+      if(key === 'addons'){
+        const chip = document.createElement('div');
+        chip.className = 'addon-chip';
+        chip.innerHTML = `
+          <div>
+            <div class="nm">${item.name}</div>
+            <div class="nm-ar arabic">${item.ar}</div>
+            <div style="font-size:12.5px;color:var(--coral);font-weight:800;margin-top:4px;">${item.price} EGP</div>
+          </div>
+          <button onclick="addToCart('${item.id}','${key}')">+</button>
+        `;
+        grid.appendChild(chip);
+      } else {
+        const card = document.createElement('div');
+        card.className = 'item-card';
+        card.innerHTML = `
+          ${item.badge ? `<div class="badge">${item.badge}</div>` : ''}
+          <div class="item-top">
+            <div>
+              <div class="item-name">${item.name}</div>
+              <div class="item-name-ar arabic">${item.ar}</div>
+            </div>
+            <div class="item-icon">${cat.icon}</div>
+          </div>
+          <div class="item-desc">${item.desc}</div>
+          <div class="item-bottom">
+            <div class="price">${item.oldPrice ? `<span class="old-price">${item.oldPrice}</span>`:''}${item.price} <small>EGP</small></div>
+            <button class="add-btn" onclick="addToCart('${item.id}','${key}')">+ Add</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      }
+    });
+    panel.appendChild(grid);
+    panelsEl.appendChild(panel);
+  });
+}
+
+function updateTabLabels(){
+  document.querySelectorAll('#menuTabs .tab').forEach(tab => {
+    const cat = MENU[tab.dataset.catkey];
+    tab.textContent = cat.icon + ' ' + (currentLang === 'ar' && cat.labelAr ? cat.labelAr : cat.label);
+  });
+}
+
+function switchTab(key){
+  document.querySelectorAll('.tab').forEach(t => t.classList.toggle('active', t.dataset.key === key));
+  document.querySelectorAll('.menu-panel').forEach(p => p.classList.toggle('active', p.id === 'panel-' + key));
+}
+
+/* marquee */
+function buildMarquee() {
+  const track = document.getElementById('marqueeTrack');
+  if (!track) return;
+  const items = MARQUEE[currentLang] || MARQUEE.en;
+  const repeatedItems = items.concat(items, items, items);
+  track.innerHTML = repeatedItems.map(t => `<span>${t}</span>`).join('');
+}
+
+/* ---------------- CART LOGIC ---------------- */
+function findItem(id, cat){ 
+  if(!MENU[cat]) return null;
+  return MENU[cat].items.find(i => i.id === id); 
+}
+
+function addToCart(id, cat){
+  const item = findItem(id, cat);
+  if(!item) return;
+  if(cart[id]){ 
+    cart[id].qty += 1; 
+  } else { 
+    cart[id] = {item, cat, qty: 1}; 
+  }
+  renderCart();
+  showToast(`Added ${item.name}`);
+}
+
+function changeQty(id, delta){
+  if(!cart[id]) return;
+  cart[id].qty += delta;
+  if(cart[id].qty <= 0) delete cart[id];
+  renderCart();
+}
+
+function cartArr(){ return Object.entries(cart).map(([id, v]) => ({id, ...v})); }
+function subtotal(){ return cartArr().reduce((s, c) => s + c.item.price * c.qty, 0); }
+function deliveryFee(){ return orderType === 'pickup' ? 0 : (subtotal() > 200 || subtotal() === 0 ? 0 : 15); }
+function totalCount(){ return cartArr().reduce((s, c) => s + c.qty, 0); }
+
+function renderCart(){
+  const body = document.getElementById('drawerBody');
+  if(!body) return;
+  const arr = cartArr();
+  if(arr.length === 0){
+    body.innerHTML = `<div class="empty-cart"><div class="ic">🛍️</div><div>${t("cartEmpty")}<br>${t("cartEmptySub")}</div></div>`;
+  } else {
+    body.innerHTML = arr.map(c => `
+      <div class="cart-line">
+        <div class="ci">${ICONS[c.cat] || '🍔'}</div>
+        <div class="info">
+          <div class="nm">${c.item.name}</div>
+          <div class="pp">${c.item.price} EGP</div>
+          <div class="qty-ctrl">
+            <button onclick="changeQty('${c.id}',-1)">−</button>
+            <span>${c.qty}</span>
+            <button onclick="changeQty('${c.id}',1)">+</button>
+          </div>
+        </div>
+        <div class="line-total">${c.item.price * c.qty}</div>
+      </div>
+    `).join('');
+  }
+  const sub = subtotal();
+  const del = deliveryFee();
+  if(document.getElementById('sumSubtotal')) document.getElementById('sumSubtotal').textContent = sub + ' EGP';
+  if(document.getElementById('sumDelivery')) document.getElementById('sumDelivery').textContent = (del === 0 && sub > 0) ? t('freeWord') : del + ' EGP';
+  if(document.getElementById('sumTotal')) document.getElementById('sumTotal').textContent = (sub + del) + ' EGP';
+  if(document.getElementById('checkoutTotalBtn')) document.getElementById('checkoutTotalBtn').textContent = (sub + del) + ' EGP';
+
+  const count = totalCount();
+  if(document.getElementById('navCartCount')) document.getElementById('navCartCount').textContent = count;
+  const checkoutBtn = document.getElementById('checkoutBtn');
+  if(checkoutBtn) {
+    checkoutBtn.disabled = count === 0;
+    checkoutBtn.textContent = count === 0 ? t('cartCheckoutEmpty') : t('cartCheckoutGo');
+  }
+
+  if(document.getElementById('stickyTotal')) document.getElementById('stickyTotal').textContent = (sub + del) + ' EGP';
+  if(document.getElementById('stickyCount')) document.getElementById('stickyCount').textContent = count + ' ' + (count === 1 ? t('itemWord') : t('itemsWord'));
+  const stickyCart = document.getElementById('stickyCart');
+  if(stickyCart) stickyCart.classList.toggle('show', count > 0);
+  saveCart();
+}
+
+/* ---------------- DRAWER / MODAL CONTROLS ---------------- */
+function openCart(){
+  document.getElementById('overlay')?.classList.add('show');
+  document.getElementById('drawer')?.classList.add('show');
+}
+function closeCart(){
+  document.getElementById('drawer')?.classList.remove('show');
+  document.getElementById('overlay')?.classList.remove('show');
+}
+function closeAll(){
+  closeCart();
+  document.getElementById('checkoutOverlay')?.classList.remove('show');
+  document.getElementById('settingsOverlay')?.classList.remove('show');
+}
+
+/* ---------------- SIDE MENU ---------------- */
+function openSideMenu(){
+  document.getElementById('sideMenu')?.classList.add('show');
+  document.getElementById('sideOverlay')?.classList.add('show');
+}
+function closeSideMenu(){
+  document.getElementById('sideMenu')?.classList.remove('show');
+  document.getElementById('sideOverlay')?.classList.remove('show');
+}
+
+/* ---------------- SETTINGS ---------------- */
+function openSettings(){
+  renderAddresses();
+  const setOverlay = document.getElementById('settingsOverlay');
+  if(setOverlay) setOverlay.classList.add('show');
+}
+
+function closeSettings(){
+  const setOverlay = document.getElementById('settingsOverlay');
+  if(setOverlay) setOverlay.classList.remove('show');
+}
+
+const settingsOverlay = document.getElementById('settingsOverlay');
+if(settingsOverlay){
+  settingsOverlay.addEventListener('click', (e) => {
+    if(e.target.id === 'settingsOverlay') closeSettings();
+  });
+}
+
+function saveSettings(){
+  try{
+    localStorage.setItem('bulkburger_settings', JSON.stringify({lang: currentLang, dark: isDark, promo: promoOn}));
+  }catch(e){}
+}
+function loadSettings(){
+  try{
+    const raw = localStorage.getItem('bulkburger_settings');
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return null;
+}
+
+/* dark mode */
+let isDark = false;
+function toggleDark(){
+  isDark = !isDark;
+  document.body.classList.toggle('dark', isDark);
+  document.getElementById('darkToggle')?.classList.toggle('on', isDark);
+  saveSettings();
+}
+
+let promoOn = true;
+function togglePromo(){
+  promoOn = !promoOn;
+  document.getElementById('promoToggle')?.classList.toggle('on', promoOn);
+  saveSettings();
+}
+
+/* ---------------- LANGUAGE ---------------- */
+const I18N = {
+  en:{
+    navMenu:"Menu", navWhy:"Why Us", navBranches:"Branches", navCart:"Cart", navSettings:"Settings",
+    settingsTitle:"Settings", settingsSub:"Manage your language, appearance and saved addresses.",
+    settingsLanguage:"Language", settingsAppearance:"Appearance",
+    settingsDark:"Dark mode", settingsDarkDesc:"Easier on the eyes at night",
+    settingsPromo:"Promo notifications", settingsPromoDesc:"Deals and new menu alerts",
+    settingsAddresses:"Saved addresses", settingsAddrHint:"Addresses you enter at checkout are saved here automatically.",
+    settingsDone:"Done",
+    noAddresses:"No saved addresses yet.", removeAddr:"Remove", addrLabelPrefix:"Address", addrSelectNew:"+ Enter a new address",
+
+    heroEyebrow:"🔥 Cairo's biggest bite since day one",
+    heroSub:"Smashed beef, crispy fried chicken, and stacked sandwiches — built double, priced fair, delivered fast across Cairo.",
+    heroCta1:"📋 View Full Menu", heroCta2:"📍 Find a Branch",
+    dealTag:"Today's Bulk Deal", dealPcs:"pcs", dealFoot:"8 pieces of fried chicken + fries + 8 bread + 8 dip cups + 1L drink",
+    statDeal:"EGP DEAL", statBranches:"BRANCHES", statItems:"MENU ITEMS",
+
+    menuKicker:"The Menu", menuTitle:"Pick Your Bulk",
+
+    whyKicker:"The Bulk Standard", whyTitle:"Why People Come Back",
+    feat1h:"Fresh, never frozen", feat1p:"Patties and chicken are prepped daily at every branch — no shortcuts in the kitchen.",
+    feat2h:"Fast delivery", feat2p:"Dedicated delivery lines at each branch get your order moving the minute it's confirmed.",
+    feat3h:"Real portions, fair prices", feat3p:"Bulk-sized combos built for actual hunger, priced for every day — not just payday.",
+    feat4h:"3 branches across Cairo", feat4p:"Faisal, El Ashreen, and Embaba — order from whichever is closest to you.",
+
+    branchesKicker:"Find Us", branchesTitle:"Our Branches",
+    footTagline:"Cairo's bulk-sized burgers, chicken and combos. Order online or call your nearest branch.",
+
+    cartTitle:"Your Order", cartSubtotal:"Subtotal", cartDelivery:"Delivery", cartTotal:"Total",
+    cartEmpty:"Your cart is empty.", cartEmptySub:"Add something bulk-sized!",
+    cartCheckoutEmpty:"Add items to checkout", cartCheckoutGo:"Checkout →",
+    itemsWord:"items", itemWord:"item", freeWord:"Free",
+
+    checkoutTitle:"Checkout", checkoutSub:"Fill in your details — pay cash when your order arrives.",
+    lblName:"Full name", lblPhone:"Phone number", lblOrderType:"Order type",
+    segDelivery:"🛵 Delivery", segPickup:"🏪 Pickup",
+    lblAddress:"Delivery address", lblBranch:"Nearest branch", lblNotes:"Notes (optional)",
+    placeOrderBtn:"Place Order —",
+    waNote:"💬 Prefer WhatsApp? After placing your order you can also send it straight to the branch in one tap.",
+    branchPlaceholder:"Select a branch...",
+    errName:"Please enter your full name (at least 3 letters).",
+    errPhone:"Enter a valid phone number (10–12 digits, numbers only).",
+    errAddress:"Please enter your delivery address.",
+    errBranch:"Please choose a branch.",
+
+    orderPlaced:"Order Placed!", confirmThanks:"Thanks", confirmMsg1:"— your order has been sent to",
+    confirmMsg2:"Pay cash on", confirmDelivery:"delivery", confirmPickup:"pickup",
+    waSend:"💬 Send order via WhatsApp", confirmDone:"Done"
+  },
+  ar:{
+    navMenu:"المنيو", navWhy:"ليه احنا", navBranches:"الفروع", navCart:"السلة", navSettings:"الإعدادات",
+    settingsTitle:"الإعدادات", settingsSub:"تحكم في اللغة والمظهر والعناوين المحفوظة.",
+    settingsLanguage:"اللغة", settingsAppearance:"المظهر",
+    settingsDark:"الوضع الداكن", settingsDarkDesc:"أريح للعين ليلاً",
+    settingsPromo:"إشعارات العروض", settingsPromoDesc:"عروض وتحديثات المنيو",
+    settingsAddresses:"العناوين المحفوظة", settingsAddrHint:"العناوين اللي بتكتبها عند الطلب بتتحفظ هنا تلقائيًا.",
+    settingsDone:"تم",
+    noAddresses:"لا توجد عناوين محفوظة بعد.", removeAddr:"حذف", addrLabelPrefix:"عنوان", addrSelectNew:"+ إدخال عنوان جديد",
+
+    heroEyebrow:"🔥 أكبر لقمة في القاهرة من أول يوم",
+    heroSub:"لحمة مشوية، فراخ كرسبي، وساندوتشات مكدسة — بحجم مضاعف، سعر عادل، وتوصيل سريع في كل القاهرة.",
+    heroCta1:"📋 شوف المنيو كامل", heroCta2:"📍 دور على فرع",
+    dealTag:"عرض اليوم", dealPcs:"قطعة", dealFoot:"8 قطع فراخ مقرمشة + بطاطس + 8 خبز + 8 كوب صوص + مشروب 1 لتر",
+    statDeal:"جنيه العرض", statBranches:"فروع", statItems:"صنف بالمنيو",
+
+    menuKicker:"المنيو", menuTitle:"اختار طلبك",
+
+    whyKicker:"معايير بالك", whyTitle:"ليه الناس بترجعلنا",
+    feat1h:"طازة، مش مجمدة", feat1p:"اللحمة والفراخ بتتحضر يوميًا في كل فرع — من غير أي اختصارات في المطبخ.",
+    feat2h:"توصيل سريع", feat2p:"خطوط توصيل مخصصة في كل فرع بتحرك طلبك أول ما يتأكد.",
+    feat3h:"كمية حقيقية وسعر عادل", feat3p:"كومبوهات بحجم كبير مبنية على جوع حقيقي، بسعر مناسب كل يوم مش بس يوم القبض.",
+    feat4h:"3 فروع في القاهرة", feat4p:"فيصل، العشرين، وامبابة — اطلب من أقرب فرع ليك.",
+
+    branchesKicker:"فروعنا", branchesTitle:"فروعنا",
+    footTagline:"برجر وفراخ وكومبوهات بحجم كبير في القاهرة. اطلب أونلاين أو اتصل بأقرب فرع.",
+
+    cartTitle:"طلبك", cartSubtotal:"الإجمالي الفرعي", cartDelivery:"التوصيل", cartTotal:"الإجمالي",
+    cartEmpty:"سلتك فاضية.", cartEmptySub:"ضيف حاجة بحجم كبير!",
+    cartCheckoutEmpty:"ضيف أصناف عشان تكمل الطلب", cartCheckoutGo:"إتمام الطلب ←",
+    itemsWord:"أصناف", itemWord:"صنف", freeWord:"مجاني",
+
+    checkoutTitle:"إتمام الطلب", checkoutSub:"اكتب بياناتك — الدفع كاش عند وصول الطلب.",
+    lblName:"الاسم بالكامل", lblPhone:"رقم الموبايل", lblOrderType:"نوع الطلب",
+    segDelivery:"🛵 توصيل", segPickup:"🏪 استلام من الفرع",
+    lblAddress:"عنوان التوصيل", lblBranch:"أقرب فرع", lblNotes:"ملاحظات (اختياري)",
+    placeOrderBtn:"تأكيد الطلب —",
+    waNote:"💬 تفضل واتساب؟ بعد تأكيد الطلب تقدر كمان تبعته للفرع مباشرة بضغطة واحدة.",
+    branchPlaceholder:"اختار الفرع...",
+    errName:"من فضلك اكتب اسمك بالكامل (3 حروف على الأقل).",
+    errPhone:"اكتب رقم موبايل صحيح (من 10 إلى 12 رقم، أرقام بس).",
+    errAddress:"من فضلك اكتب عنوان التوصيل.",
+    errBranch:"من فضلك اختار الفرع.",
+
+    orderPlaced:"تم تأكيد الطلب!", confirmThanks:"شكرًا", confirmMsg1:"— طلبك اتبعت لفرع",
+    confirmMsg2:"الدفع كاش عند الـ", confirmDelivery:"التوصيل", confirmPickup:"الاستلام",
+    waSend:"💬 ابعت الطلب على واتساب", confirmDone:"تم"
+  }
+};
+
+function t(key){
+  return (I18N[currentLang] && I18N[currentLang][key]) || I18N.en[key] || key;
+}
+
+function setLang(lang){
+  currentLang = lang;
+  saveSettings();
+  try { localStorage.setItem('bulkburger_lang', lang); } catch(e){}
+
+  const btnEn = document.getElementById('langEnBtn');
+  const btnAr = document.getElementById('langArBtn');
+  if(btnEn) btnEn.classList.toggle('active', lang === 'en');
+  if(btnAr) btnAr.classList.toggle('active', lang === 'ar');
+  document.body.classList.toggle('rtl', lang === 'ar');
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.dataset.i18n;
+    if(I18N[lang] && I18N[lang][key]) el.textContent = I18N[lang][key];
+  });
+  
+  document.querySelectorAll('[data-i18nHtml]').forEach(el => {
+    const key = el.dataset.i18nHtml;
+    if(I18N[lang] && I18N[lang][key]) el.innerHTML = I18N[lang][key];
+  });
+
+  updateTabLabels();
+  buildMarquee();
+  renderCart();
+  renderAddresses();
+}
+
+function openCheckout(){
+  if(totalCount() === 0) return;
+  closeCart();
+  document.getElementById('checkoutOverlay')?.classList.add('show');
+}
+
+const checkoutOverlay = document.getElementById('checkoutOverlay');
+if(checkoutOverlay){
+  checkoutOverlay.addEventListener('click', (e) => {
+    if(e.target.id === 'checkoutOverlay') closeAll();
+  });
+}
+
+function setOrderType(type){
+  orderType = type;
+  document.getElementById('segDelivery')?.classList.toggle('active', type === 'delivery');
+  document.getElementById('segPickup')?.classList.toggle('active', type === 'pickup');
+  const addrField = document.getElementById('addressField');
+  if(addrField) addrField.style.display = type === 'delivery' ? 'block' : 'none';
+  renderCart();
+}
+
+function showToast(msg){
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = '✓ ' + msg;
+  t.classList.add('show');
+  clearTimeout(window._toastTimer);
+  window._toastTimer = setTimeout(() => t.classList.remove('show'), 1800);
+}
+
+/* ---------------- CHECKOUT VALIDATION ---------------- */
+function setFieldError(inputId, errId, msg){
+  const input = document.getElementById(inputId);
+  const err = document.getElementById(errId);
+  if(!input || !err) return;
+  if(msg){
+    input.classList.add('invalid');
+    err.textContent = msg;
+    err.classList.add('show');
+  } else {
+    input.classList.remove('invalid');
+    err.textContent = '';
+    err.classList.remove('show');
+  }
+}
+
+function validateCheckout(){
+  let valid = true;
+  const name = document.getElementById('custName')?.value.trim() || '';
+  const phoneRaw = document.getElementById('custPhone')?.value.trim() || '';
+  const phoneDigits = phoneRaw.replace(/\D/g,'');
+  const address = document.getElementById('custAddress')?.value.trim() || '';
+  const branch = document.getElementById('custBranch')?.value || '';
+
+  if(name.length < 3){
+    setFieldError('custName','errName', t('errName')); valid = false;
+  } else setFieldError('custName','errName', '');
+
+  if(phoneDigits.length < 10 || phoneDigits.length > 12 || phoneDigits !== phoneRaw){
+    setFieldError('custPhone','errPhone', t('errPhone')); valid = false;
+  } else setFieldError('custPhone','errPhone', '');
+
+  if(orderType === 'delivery' && !address){
+    setFieldError('custAddress','errAddress', t('errAddress')); valid = false;
+  } else setFieldError('custAddress','errAddress', '');
+
+  if(!branch){
+    setFieldError('custBranch','errBranch', t('errBranch')); valid = false;
+  } else setFieldError('custBranch','errBranch', '');
+
+  return valid;
+}
+
+const phoneInput = document.getElementById('custPhone');
+if(phoneInput){
+  phoneInput.addEventListener('input', function(){
+    this.value = this.value.replace(/\D/g,'').slice(0, 12);
+  });
+}
+
+function placeOrder(){
+  if(!validateCheckout()) return;
+
+  const name = document.getElementById('custName').value.trim();
+  const phone = document.getElementById('custPhone').value.trim();
+  const address = document.getElementById('custAddress')?.value.trim() || '';
+  const branch = document.getElementById('custBranch').value;
+
+  const orderId = 'BB-' + (orderCounter++);
+  const notes = document.getElementById('custNotes')?.value.trim() || '';
+  const sub = subtotal(), del = deliveryFee(), total = sub + del;
+
+  const lines = cartArr().map(c => `${c.qty}x ${c.item.name} (${c.item.price * c.qty} EGP)`).join('\n');
+  const waText = encodeURIComponent(
+    `New order ${orderId}\nName: ${name}\nPhone: ${phone}\nType: ${orderType}\n${orderType === 'delivery' ? 'Address: ' + address + '\n' : ''}Branch: ${branch}\n\n${lines}\n\nSubtotal: ${sub} EGP\nDelivery: ${del} EGP\nTotal: ${total} EGP${notes ? '\nNotes: ' + notes : ''}`
+  );
+
+  if(document.getElementById('confirmName')) document.getElementById('confirmName').textContent = ', ' + name.split(' ')[0];
+  if(document.getElementById('confirmBranch')) document.getElementById('confirmBranch').textContent = branch;
+  if(document.getElementById('confirmMode')) document.getElementById('confirmMode').textContent = orderType === 'delivery' ? t('confirmDelivery') : t('confirmPickup');
+  if(document.getElementById('confirmThanksTxt')) document.getElementById('confirmThanksTxt').textContent = t('confirmThanks');
+  if(document.getElementById('confirmMsg1Txt')) document.getElementById('confirmMsg1Txt').textContent = t('confirmMsg1');
+  if(document.getElementById('confirmMsg2Txt')) document.getElementById('confirmMsg2Txt').textContent = t('confirmMsg2');
+  if(document.getElementById('orderIdBox')) document.getElementById('orderIdBox').textContent = '#' + orderId;
+  if(document.getElementById('waLink')) document.getElementById('waLink').href = 'https://wa.me/201153500222?text=' + waText;
+
+  if(orderType === 'delivery') saveAddressIfNew(address);
+
+  if(document.getElementById('checkoutFormWrap')) document.getElementById('checkoutFormWrap').style.display = 'none';
+  if(document.getElementById('confirmWrap')) document.getElementById('confirmWrap').style.display = 'block';
+}
+
+function resetCart(){
+  cart = {};
+  renderCart();
+  if(document.getElementById('checkoutFormWrap')) document.getElementById('checkoutFormWrap').style.display = 'block';
+  if(document.getElementById('confirmWrap')) document.getElementById('confirmWrap').style.display = 'none';
+  ['custName','custPhone','custAddress','custNotes'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  const branchEl = document.getElementById('custBranch'); if(branchEl) branchEl.value = '';
+  ['custName','custPhone','custAddress','custBranch'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.classList.remove('invalid');
+  });
+  ['errName','errPhone','errAddress','errBranch'].forEach(id => {
+    const el = document.getElementById(id);
+    if(el){ el.textContent = ''; el.classList.remove('show'); }
+  });
+  const sel = document.getElementById('savedAddrSelect'); if(sel) sel.value = '';
+}
+
+/* ---------------- INITIALIZATION ON LOAD ---------------- */
+(function init(){
+  const savedSettings = loadSettings();
+  let initialLang = 'en';
+  
+  if(savedSettings){
+    if(savedSettings.dark){
+      isDark = true;
+      document.body.classList.add('dark');
+      const toggle = document.getElementById('darkToggle');
+      if(toggle) toggle.classList.add('on');
+    }
+    if(savedSettings.promo === false){
+      promoOn = false;
+      const toggle = document.getElementById('promoToggle');
+      if(toggle) toggle.classList.remove('on');
+    }
+    if(savedSettings.lang) initialLang = savedSettings.lang;
+  }
+  
+  try {
+    const storedLang = localStorage.getItem('bulkburger_lang');
+    if(storedLang) initialLang = storedLang;
+  } catch(e){}
+
+  loadCart();
+  setLang(initialLang);
+  populateSavedAddrSelect();
+  renderAddresses();
+})();
+</script>
+</body>
+</html>
