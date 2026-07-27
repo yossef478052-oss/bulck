@@ -62,6 +62,23 @@ body{
   overflow-x:hidden;
   transition:background .3s, color .3s;
 }
+html {
+  background-color: #ffffff;
+  color: #222222;
+}
+
+html.dark {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.my-title {
+  color: #ff5722;
+}
+
+.sub-text {
+  color: #888888;
+}
 body.rtl{direction:rtl;}
 body.rtl .arabic{direction:rtl;}
 img{max-width:100%;display:block;}
@@ -1545,12 +1562,24 @@ function resetCart(){
   populateSavedAddrSelect();
   renderAddresses();
 })();
-  // التاكد إذا كان جهاز المستخدم مفعل الدارك مود على مستوى النظام
-const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+ // 1. فحص هل المستخدم عنده تفضيل داكن من النظام
+const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
-if (prefersDark) {
-  // تفعيل الدارك مود الخاص بموقعك تلقائياً
+// 2. فحص هل فيه اختيار متخزن قبل كده في الـ LocalStorage
+const savedTheme = localStorage.getItem('theme');
+
+if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
   document.documentElement.classList.add('dark');
+} else {
+  document.documentElement.classList.remove('dark');
+}
+
+// 3. دالة الزرار اللي بيغيّر الوضع (Toggle)
+function toggleDarkMode() {
+  const isDark = document.documentElement.classList.toggle('dark');
+  
+  // حفظ الاختيار عشان لما يفتح الصفحة تاني
+  localStorage.setItem('theme', isDark ? 'dark' : 'light');
 }
 </script>
 </body>
