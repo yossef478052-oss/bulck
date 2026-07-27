@@ -9,8 +9,7 @@
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Cairo:wght@600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root{
-  color-scheme:light;
-  --navy:#12213F;
+  --navy:#12213F ;
   --navy-2:#1B2E52;
   --navy-3:#0B1730;
   --coral:#E8542C;
@@ -24,7 +23,6 @@
   --radius: 18px;
 }
 body.dark{
-  color-scheme:dark;
   --cream:#2f343d;
   --cream-2:#9ca6bd;
   --ink:#faf6ee;
@@ -35,6 +33,7 @@ body.dark{
   --line:rgba(255,255,255,0.09);
   --shadow: 0 20px 40px -12px rgba(0,0,0,0.55);
 }
+  html.dark{color-scheme:dark;}
 body.dark .item-card, body.dark .branch-card, body.dark .addon-chip, body.dark .drawer-foot{
   background:#152342; border-color:var(--line); color:var(--ink);
 }
@@ -53,31 +52,14 @@ body.dark .wa-note{background:#152342;border-color:var(--line);color:#9aa3bd;}
 body.dark .sum-row{color:#9aa3bd;}
 
 *{margin:0;padding:0;box-sizing:border-box;}
-html{scroll-behavior:smooth;color-scheme:light;}
+html{scroll-behavior:smooth; color-scheme:light;}
 body{
   font-family:'Inter',sans-serif;
-  background:var(--cream) !important;
+  background:var(--cream) ;
   color:var(--ink);
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
   transition:background .3s, color .3s;
-}
-html {
-  background-color: #ffffff;
-  color: #222222;
-}
-
-html.dark {
-  background-color: #121212;
-  color: #ffffff;
-}
-
-.my-title {
-  color: #ff5722;
-}
-
-.sub-text {
-  color: #888888;
 }
 body.rtl{direction:rtl;}
 body.rtl .arabic{direction:rtl;}
